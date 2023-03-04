@@ -19,7 +19,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signInWithEmailPass } from "../scripts/auth/signin";
 import { OAuthList } from "../components/auth/oauth";
 
@@ -47,6 +47,14 @@ export default function LoginPage() {
       });
     }
   }
+  useEffect(() => {
+    let tparam = decodeURI(
+      new URL(window.location.href).searchParams.get("moveto")
+    );
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("moveto", tparam);
+    }
+  }, []);
   return (
     <>
       <style jsx>{`

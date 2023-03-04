@@ -15,9 +15,17 @@ import { signOut } from "../scripts/auth/signout";
 export default function LogoutPage() {
   const router = useRouter();
   const toast = useToast();
+  let redirecturl = "/dashboard";
   useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      sessionStorage.getItem("moveto") != "null"
+    ) {
+      redirecturl = sessionStorage.getItem("moveto");
+    }
+    sessionStorage.removeItem("moveto");
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event == "SIGNED_IN") location.replace("/dashboard");
+      if (event == "SIGNED_IN") location.replace(redirecturl);
     });
   }, []);
   return (
