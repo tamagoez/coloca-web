@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl.pathname;
   console.log(url);
 
-  const nologin = ["/", "/login", "/signup"];
+  const nologin = ["/", "/login", "/signup", "/callback"];
   // We need to create a response and hand it to the supabase client to be able to modify the response headers.
   const res = NextResponse.next();
   if (url.startsWith("/_next")) {

@@ -21,6 +21,9 @@ export async function signInWithOAuth(provider: Provider) {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider,
+      options: {
+        redirectTo: "http://localhost:3000/callback",
+      },
     });
 
     if (error) throw error;

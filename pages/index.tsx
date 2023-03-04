@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { Link } from "@chakra-ui/react";
+import { Button, Link } from "@chakra-ui/react";
 import {
   Box,
   Heading,
@@ -29,13 +29,13 @@ const IndexPage = () => (
         ユーザーのカスタマイズ性、プライバシー性を追求した多機能かつシンプルなSNS。
       </Text>
       <Box my="2" fontSize="xl">
-        <Link as={NextLink} color="teal.400" href="#" fontWeight="bold">
+        <Button as={NextLink} href="/signup" color="teal.400">
           新規登録
-        </Link>{" "}
+        </Button>
         or{" "}
-        <Link as={NextLink} color="teal.400" href="/login" fontWeight="bold">
+        <Button as={NextLink} href="/login">
           ログイン
-        </Link>{" "}
+        </Button>{" "}
         (完全無料!)
       </Box>
     </LinkBox>
