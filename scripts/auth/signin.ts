@@ -18,11 +18,20 @@ export async function signInWithEmailPass(email: string, password: string) {
 }
 
 export async function signInWithOAuth(provider: Provider) {
+  let baseUrl = "https://coloca.vercel.app"
+  let redirectTo = "/callback"
+  if (typeof window !== "undefined") {
+    baseUrl = location.origin;
+    if (false) {
+      const lurl = JSON.parse(localStorage.getItem("authdata"))
+      if (lurl["redirectTo"]) { redirectTo = lurl["redirectTo"] }
+    }
+  }
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: "http://localhost:3000/callback",
+        redirectTo: `${baseUrl}${redirectTo}`,
       },
     });
 
