@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { AppProps } from "next/app";
 // 1. import `ChakraProvider` component
 import { ChakraProvider } from "@chakra-ui/react";
+import "../styles/twemoji.css"
 
 function MyApp({
   Component,
