@@ -25,15 +25,27 @@ export async function middleware(req: NextRequest) {
   // Check auth condition
   if (session?.user.email) {
     console.log("logined user");
-    const handleid = session.user.user_metadata.handleid;
-    if (url === `/profile/${handleid}`) {
-      return NextResponse.rewrite(new URL("/profile/edit", req.url));
-    }
-    if (nologin.indexOf(url) === -1) {
-      // Authentication successful, forward request to protected route.
-      return res;
+    const { data: internaldata } = await supabase
+      .from("internal_profile")
+      .select("*")
+      .eq("useruuid", session.user.id)
+      .single();
+    if (!internaldata && url !== "/profile/init" && url !== "/logout") {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = "/profile/init";
+      redirectUrl.searchParams.set(`moveto`, req.nextUrl.pathname);
+      return NextResponse.redirect(redirectUrl);
     } else {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      const handleid = session.user.user_metadata.handleid;
+      if (url === `/profile/${handleid}`) {
+        return NextResponse.rewrite(new URL("/profile/edit", req.url));
+      }
+      if (nologin.indexOf(url) === -1) {
+        // Authentication successful, forward request to protected route.
+        return res;
+      } else {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
     }
   }
   if (nologin.indexOf(url) === -1) {
