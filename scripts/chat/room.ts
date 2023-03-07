@@ -1,3 +1,6 @@
 export async function RoomList() {
-    try 
+  try {
+  } catch (error) {
+    console.error(error.message);
+  }
 }
