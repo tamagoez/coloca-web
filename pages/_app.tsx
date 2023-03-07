@@ -6,6 +6,7 @@ import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import "../styles/twemoji.css"
 import { TopNavBar } from "../components/ui/bar";
+import { Analytics } from '@vercel/analytics/react';
 
 function MyApp({
   Component,
@@ -22,6 +23,7 @@ function MyApp({
       initialSession={pageProps.initialSession}
     >
       <ChakraProvider>
+        <Analytics />
         <div>
         <TopNavBar />
         <div style={{marginTop: "max(5vh, 50px)", height: "95vh"}}>
