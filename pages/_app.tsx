@@ -24,7 +24,7 @@ function MyApp({
       <ChakraProvider>
         <div>
         <TopNavBar />
-        <div style={{marginTop: "max(5vh, 50px)"}}>
+        <div style={{marginTop: "max(5vh, 50px)", height: "95vh"}}>
           <Component {...pageProps} />
           </div>
           </div>
