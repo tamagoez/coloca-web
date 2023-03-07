@@ -72,7 +72,7 @@ export default function InitProfile() {
   }, [handleid]);
   useEffect(() => {
     function checkAlready() {
-      fetch("/api/profile/init")
+      fetch("/api/profile/my")
         .then((response) => {
           response.json();
           if (response.status === 200) {

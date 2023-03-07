@@ -30,38 +30,63 @@ const ProtectedRoute: NextApiHandler = async (req, res) => {
       description:
         "The user does not have an active session or is not authenticated",
     });
+  // Run queries with RLS on the server
+  const { data: internaldata } = await supabaseAdmin
+    .from("internal_profile")
+    .select("*")
+    .eq("useruuid", session.user.id)
+    .single();
+  const { data: publicdata, error } = await supabase
+    .from("public_profile")
+    .select("*")
+    .eq("userintid", internaldata.userintid)
+    .limit(1)
+    .single();
 
   if (req.method.toLocaleLowerCase() === "get") {
-    // Run queries with RLS on the server
-    const { data: internaldata } = await supabaseAdmin
-      .from("internal_profile")
-      .select("*")
-      .eq("useruuid", session.user.id)
-      .single();
     if (!internaldata)
       return res.status(404).json({
         error: "not_found",
         description:
           "Your profile may not be dound as it has not been set up yet.",
       });
-    const { data: publicdata, error } = await supabase
-      .from("public_profile")
-      .select("*")
-      .eq("userintid", internaldata.userintid)
-      .limit(1)
-      .single();
     return res.status(200).json({ ...internaldata, ...publicdata });
   } else {
     if (req.method.toLocaleLowerCase() === "post") {
-      const { data: internaldata, error: internal_error } = await supabase
+      if (!internaldata) return res.status(500);
+      // データの準備
+      const olddata = { ...internaldata, ...publicdata };
+      const data = req.body;
+      const handleid = internaldata.disp_handleid;
+      // 古いやつに新しいやつを合成
+      const updatedProfile = Object.assign({}, olddata, data);
+      // 追加するよ～～
+      const { data: new_internaldata, error: internal_error } =
+        await supabaseAdmin
           .from("internal_profile")
-          .insert({})
+          .update({
+            handleid: updatedProfile.disp_handleid.toLocaleLowerCase(),
+            disp_handleid: updatedProfile.disp_handleid,
+          })
+          .eq("useruuid", session.user.id)
+          .select()
+          .single();
+      const { data: new_publicdata, error: public_error } = await supabaseAdmin
+        .from("public_profile")
+        .update({
+          userintid: olddata.userintid,
+          handleid: updatedProfile.disp_handleid.toLocaleLowerCase(),
+          disp_handleid: updatedProfile.disp_handleid,
+          username: updatedProfile.username,
+          bio: updatedProfile.bio,
+        })
+        .eq("userintid", new_internaldata.userintid)
         .select()
-        .eq("useruuid", session.user.id)
         .single();
-        if (!internaldata) return res.status(500);
-        const handleid = internaldata.disp_handleid;
-
+      console.log(updatedProfile);
+      console.error(internal_error);
+      console.error(public_error);
+      return res.status(200).json({ ...new_internaldata, ...new_publicdata });
     }
   }
 };
