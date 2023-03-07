@@ -14,10 +14,12 @@ import {
   InputLeftAddon,
   Textarea,
 } from "@chakra-ui/react";
+import { Router, useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { verifyHandleid } from "../../scripts/user/handleid";
 
 export default function InitProfile() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [handleid, setHandleid] = useState("");
   const [username, setUsername] = useState("");
@@ -34,9 +36,14 @@ export default function InitProfile() {
     console.log(result);
     setIsHandleid(result);
   }
+  let moveTo;
+  if (typeof window !== "undefined")
+    var queryTo = new URLSearchParams(window.location.search).get("moveto");
+  moveTo = queryTo ? queryTo : moveTo;
+
   function saveProfile() {
     setLoading(false);
-    fetch("/api/profile/my", {
+    fetch("/api/profile/init", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,13 +54,39 @@ export default function InitProfile() {
         bio: bio,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        response.json();
+        if (response.status === 200) {
+          // レスポンスが202の場合に実行するコードをここに記述する
+          router.replace(moveTo ? moveTo : "/dashboard");
+        } else {
+          // 202以外の場合に実行するコードをここに記述する
+        }
+      })
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
   }
+
   useEffect(() => {
     checkverify(handleid);
   }, [handleid]);
+  useEffect(() => {
+    function checkAlready() {
+      fetch("/api/profile/init")
+        .then((response) => {
+          response.json();
+          if (response.status === 200) {
+            // レスポンスが202の場合に実行するコードをここに記述する
+            router.replace(moveTo ? moveTo : "/profile/edit");
+          } else {
+            // 202以外の場合に実行するコードをここに記述する
+          }
+        })
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
+    }
+    checkAlready();
+  }, []);
 
   return (
     <>
