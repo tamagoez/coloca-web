@@ -4,9 +4,9 @@ import { useState } from "react";
 import type { AppProps } from "next/app";
 // 1. import `ChakraProvider` component
 import { ChakraProvider } from "@chakra-ui/react";
-import "../styles/twemoji.css"
+import "../styles/twemoji.css";
 import { TopNavBar } from "../components/ui/bar";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 
 function MyApp({
   Component,
@@ -18,20 +18,29 @@ function MyApp({
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
 
   return (
-    <SessionContextProvider
-      supabaseClient={supabaseClient}
-      initialSession={pageProps.initialSession}
-    >
-      <ChakraProvider>
-        <Analytics />
-        <div>
-        <TopNavBar />
-        <div style={{marginTop: "max(5vh, 50px)", height: "95vh"}}>
-          <Component {...pageProps} />
+    <>
+      <style jsx>{`.AppComponent {
+      display: flex;
+      flex-flow: column;
+      height: 100vh;
+      
+      }
+    }`}</style>
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
+        <ChakraProvider>
+          <Analytics />
+          <div className="AppComponent">
+            <TopNavBar />
+            <div style={{ marginTop: "max(5vh, 50px)", height: "95vh" }}>
+              <Component {...pageProps} />
+            </div>
           </div>
-          </div>
-      </ChakraProvider>
-    </SessionContextProvider>
+        </ChakraProvider>
+      </SessionContextProvider>
+    </>
   );
 }
 

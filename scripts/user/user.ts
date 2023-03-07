@@ -13,3 +13,17 @@ export async function getUserUUID() {
     console.error(error.message);
   }
 }
+
+export async function fetchPublicProfile(userintid: string) {
+  try {
+    const { data, error } = await supabase
+      .from("public_profile")
+      .select("*")
+      .eq("userintid", userintid)
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (error: any) {
+    console.error(error.message);
+  }
+}

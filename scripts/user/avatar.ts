@@ -26,3 +26,4 @@ export async function uploadAvatar(userintid, file) {
     return;
   }
 }
+

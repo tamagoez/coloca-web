@@ -10,6 +10,7 @@ import {
   Skeleton,
   SkeletonCircle,
   Text,
+  Textarea,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ export default function MyProfile() {
   const [avatar, setAvatar] = useState<any>();
   const [username, setUsername] = useState("ユーザー名");
   const [handleid, setHandleid] = useState("handleid");
+  const [bio, setBio] = useState<string>("");
 
   // アバター
   // https://nyanblog2222.com/programming/javascript/1132/
@@ -38,14 +40,18 @@ export default function MyProfile() {
     // 4. 読み込んだ画像ファイルをURLに変換
     reader.readAsDataURL(event.target.files[0]);
   };
-  async function fetchData() {
-    setLoading(true);
-    const response = await fetch("/api/profile/my");
-    const data = await response.json();
-    console.dir(data);
+  async function fetchData(profiledata?) {
+    let data = profiledata;
+    if (!profiledata) {
+      setLoading(true);
+      const response = await fetch("/api/profile/my");
+      data = await response.json();
+      console.dir(data);
+    }
     setUsername(data.username);
     setHandleid(data.disp_handleid);
-    setAvatar(null);
+    setAvatar(data.avatar);
+    setBio(data.bio);
     setLoading(false);
   }
 
@@ -54,6 +60,7 @@ export default function MyProfile() {
     const savedataset = {
       username: username,
       disp_handleid: handleid,
+      bio: bio,
     };
     try {
       const data = await fetch("/api/profile/my", {
@@ -66,7 +73,8 @@ export default function MyProfile() {
       const response = await data.json();
       console.log(response);
       try {
-        uploadAvatar(response.userintid, avatar);
+        // await uploadAvatar(response.userintid, avatar);
+        fetchData(response);
       } catch (error) {
         alert(error);
       }
@@ -74,8 +82,6 @@ export default function MyProfile() {
       console.error(error);
       alert(error.message);
     }
-
-    fetchData();
   }
 
   useEffect(() => {
@@ -84,7 +90,6 @@ export default function MyProfile() {
 
   return (
     <>
-      <h1>自分のプロフィール</h1>
       <input
         style={{
           visibility: "hidden",
@@ -96,13 +101,6 @@ export default function MyProfile() {
         onChange={changeAvatar}
         disabled={loading}
       />
-      <Button
-        onClick={() => {
-          router.push("/logout");
-        }}
-      >
-        ログアウト
-      </Button>
       <Box bg="gray.100" mt="2" py="2" w="300px" pl="2" borderRadius="8">
         <Flex>
           <SkeletonCircle size="12" isLoaded={!loading} ml="1">
@@ -143,8 +141,14 @@ export default function MyProfile() {
           </Box>
         </Flex>
       </Box>
+      <Skeleton isLoaded={!loading}>
+        <Textarea
+          placeholder="Bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+        />
+      </Skeleton>
       <Button onClick={() => saveData()}>保存する</Button>
-      <Button onClick={() => setLoading(!loading)}>*表示切替</Button>
     </>
   );
 }
