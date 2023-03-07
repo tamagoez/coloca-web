@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 // 1. import `ChakraProvider` component
 import { ChakraProvider } from "@chakra-ui/react";
 import "../styles/twemoji.css"
+import { TopNavBar } from "../components/ui/bar";
 
 function MyApp({
   Component,
@@ -21,7 +22,12 @@ function MyApp({
       initialSession={pageProps.initialSession}
     >
       <ChakraProvider>
-        <Component {...pageProps} />
+        <div>
+        <TopNavBar />
+        <div style={{marginTop: "max(5vh, 50px)"}}>
+          <Component {...pageProps} />
+          </div>
+          </div>
       </ChakraProvider>
     </SessionContextProvider>
   );
