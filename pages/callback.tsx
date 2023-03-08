@@ -40,7 +40,7 @@ export default function LogoutPage() {
     }
     sessionStorage.removeItem("moveto");
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event == "SIGNED_IN") router.replace("/dashboard");
+      if (event == "SIGNED_IN") location.replace("/dashboard");
     });
   }, []);
   return (

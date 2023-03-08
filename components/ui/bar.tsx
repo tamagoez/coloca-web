@@ -12,7 +12,10 @@ import {
   MenuList,
   Wrap,
   WrapItem,
+  IconButton,
+  useColorMode,
 } from "@chakra-ui/react";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
 export function TopNavBar() {
@@ -24,21 +27,21 @@ export function TopNavBar() {
           width: 100vw;
           height: 5vh;
           min-height: 50px;
-          background: #f5f3f2;
           top: 0;
           z-index: 9999;
           display: flex;
         }
       `}</style>
-      <div className="TopNavBar">
+      <Box backgroundColor="gray.200" className="TopNavBar">
         <AvatarMenu />
-      </div>
+      </Box>
     </>
   );
 }
 
 function AvatarMenu() {
   const router = useRouter();
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
       <Menu>
@@ -67,6 +70,15 @@ function AvatarMenu() {
             <MenuItem>Dashboard</MenuItem>
             <MenuItem>Remark</MenuItem>
             <MenuItem onClick={() => router.push("/chat")}>Chat</MenuItem>
+          </MenuGroup>
+          <MenuGroup>
+            <IconButton
+              // _focus={{_focus: "none"}} //周りの青いアウトラインが気になる場合に消す方法
+              mb={10}
+              aria-label="DarkMode Switch"
+              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />} //自分の好みでSunアイコンはreact-iconsを使用しています
+              onClick={toggleColorMode}
+            />
           </MenuGroup>
         </MenuList>
       </Menu>

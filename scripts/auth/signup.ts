@@ -4,7 +4,6 @@ const supabase = createBrowserSupabaseClient();
 export async function signUpWithEmailPass(
   email: string,
   password: string,
-  username: string,
   birthday: string
 ) {
   try {
@@ -13,7 +12,6 @@ export async function signUpWithEmailPass(
       password: password,
       options: {
         data: {
-          username: username,
           birthday: birthday,
         },
       },

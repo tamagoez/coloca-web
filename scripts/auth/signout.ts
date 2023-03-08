@@ -1,7 +1,6 @@
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 const supabase = createBrowserSupabaseClient();
 
-
 export async function signOut() {
   try {
     const { error } = await supabase.auth.signOut();

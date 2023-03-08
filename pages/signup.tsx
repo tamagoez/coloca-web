@@ -38,13 +38,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [birthday, setBirthday] = useState("");
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [logining, setLogining] = useState(false);
   const [check, setCheck] = useState(false);
   // https://qiita.com/kne-cr/items/eba5d331c7ae781bd1c6
   const isEmail = !email.match(/.+@.+\..+/);
   const isPass = pass == "";
-  const isUsername = username == "";
+  // const isUsername = username == "";
   const viewvariant = "flushed";
   const isBirthday = birthday == "";
   // モーダル
@@ -53,7 +53,7 @@ export default function LoginPage() {
   const toast = useToast();
   async function signupprocess() {
     try {
-      await signUpWithEmailPass(email, pass, username, birthday);
+      await signUpWithEmailPass(email, pass, birthday);
       toast({
         title: "Signup Succeed!",
         description: "Check your email",
@@ -119,16 +119,6 @@ export default function LoginPage() {
             </InputGroup>
             {!isPass ? <></> : <></>}
           </FormControl>
-          <FormControl isInvalid={isUsername} mb="4">
-            <FormLabel>Username</FormLabel>
-            <Input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              variant={viewvariant}
-            />
-            {!isUsername ? <></> : <></>}
-          </FormControl>
           <FormControl isInvalid={isBirthday} mb="4">
             <FormLabel>Birthday</FormLabel>
             <Input
@@ -149,7 +139,7 @@ export default function LoginPage() {
                 variant="solid"
                 isLoading={logining}
                 isDisabled={
-                  isEmail || isPass || isUsername || isBirthday || !check
+                  isEmail || isPass || isBirthday || !check
                 }
                 onClick={() => signupprocess()}
               >

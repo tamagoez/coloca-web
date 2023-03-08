@@ -36,7 +36,7 @@ export default function LoginPage() {
   async function loginprocess() {
     try {
       await signInWithEmailPass(email, pass);
-      router.replace("/");
+      router.replace("/callback");
     } catch (err) {
       toast({
         title: "Login Failed",
