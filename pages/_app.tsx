@@ -34,7 +34,7 @@ function MyApp({
           <Analytics />
           <div className="AppComponent">
             <TopNavBar />
-            <div style={{ marginTop: "max(5vh, 50px)", height: "95vh" }}>
+            <div style={{ height: "calc(100vh - 50px)" }}>
               <Component {...pageProps} />
             </div>
           </div>

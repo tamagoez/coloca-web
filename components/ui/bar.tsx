@@ -25,7 +25,7 @@ export function TopNavBar() {
         .TopNavBar {
           position: fixed;
           width: 100vw;
-          height: 5vh;
+          height: 50px;
           min-height: 50px;
           top: 0;
           z-index: 9999;
