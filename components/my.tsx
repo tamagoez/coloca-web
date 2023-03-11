@@ -32,7 +32,7 @@ export function MyUserBox({ canChangeUser }: { canChangeUser: boolean }) {
             <Text fontWeight="bold" mt="0.5">
               {username}
               <Badge ml="1" colorScheme="green">
-                New
+                Beta
               </Badge>
             </Text>
           </Skeleton>

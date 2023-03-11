@@ -15,6 +15,7 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { uploadAvatar } from "../../scripts/user/avatar";
+import { getMyProfile, saveMyPublicProfile } from "../../scripts/user/my";
 export default function MyProfile() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -44,8 +45,7 @@ export default function MyProfile() {
     let data = profiledata;
     if (!profiledata) {
       setLoading(true);
-      const response = await fetch("/api/profile/my");
-      data = await response.json();
+      data = await getMyProfile()
       console.dir(data);
     }
     setUsername(data.username);
@@ -63,18 +63,11 @@ export default function MyProfile() {
       bio: bio,
     };
     try {
-      const data = await fetch("/api/profile/my", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(savedataset),
-      });
-      const response = await data.json();
+      const response = await saveMyPublicProfile({username: username, disp_handleid: handleid, bio: bio})
       console.log(response);
       try {
         // await uploadAvatar(response.userintid, avatar);
-        fetchData(response);
+        fetchData();
       } catch (error) {
         alert(error);
       }
